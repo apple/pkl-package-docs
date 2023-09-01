@@ -1,0 +1,19 @@
+[versions]
+pkl = "0.+"
+ktor = "2.+"
+spotless = "6.25.0"
+kotlinxSerialization = "1.+"
+kotlin = "1.+"
+
+[libraries]
+pklDoc = { group = "org.pkl-lang", name = "pkl-doc", version.ref = "pkl" }
+pklCommonsCli = { group = "org.pkl-lang", name = "pkl-commons-cli", version.ref = "pkl" }
+pklStdLib = { group = "org.pkl-lang", name = "pkl-stdlib", version.ref = "pkl" }
+ktorClientCore = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktorClientJava = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
+kotlinxSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+[plugins]
+pkl = { id = "org.pkl-lang", version.ref = "pkl" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

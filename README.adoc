@@ -1,0 +1,14 @@
+= Package Docs
+
+This repository hosts pkldoc documentation for Pkl packages.
+
+It scans for new packages by polling for the latest GitHub releases from a set of GitHub repositories.
+
+== How documentation is generated
+
+This repository scans for new releases of packages from a set of repositories, determined in link:build.gradle.kts[].
+
+It works by listing releases of each of these repositories, and spawnings the pkldoc generator with the latest set of each package.
+
+The documentation gets pushed to the `www` branch of this repository.
+Once the documentation is pushed, the CI build for pkl-lang.org is triggered, which clones down the `www` branch and adds its contents to the resulting website.
