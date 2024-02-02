@@ -51,7 +51,7 @@ class PackageDocs(
     val allPackages = buildList {
       for (repo in repos) {
         val releases = github.getReleases(repo)
-          .filter { it.name.matches(Regex("@\\d+.\\d+\\d+$")) }
+          .filter { it.name.contains('@') }
         for (release in releases) {
           if (repo.owner == "apple") {
             add(PackageUri("package://pkg.pkl-lang.org/${repo.name}/${release.name}"))
