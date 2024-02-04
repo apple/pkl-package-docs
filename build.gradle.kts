@@ -29,14 +29,14 @@ kotlin {
     jvmToolchain(17)
 }
 
-val repos = arrayOf<String>(
+val repos = arrayOf(
     "apple/pkl-pantry",
     "apple/pkl-k8s",
     "apple/pkl-go",
     "apple/pkl-swift"
 )
 
-val generateDocs by tasks.registering(JavaExec::class) {
+tasks.create<JavaExec>("generateDocs") {
     group = "build"
     mainClass.set("org.pkl.package_docs.MainKt")
     val outputDir = file("build/package-docs")
