@@ -34,7 +34,6 @@ import org.pkl.doc.DocPackageInfo
 import org.pkl.doc.DocsiteInfo
 import java.net.URI
 import java.nio.file.Path
-import java.util.Comparator
 import java.util.concurrent.TimeUnit
 
 class PackageDocException(message: String) : Exception(message)
@@ -45,7 +44,9 @@ class PackageDocs(
   private val repos: List<Repo>
 ) {
 
-  private val github = GitHubClient(System.getenv("GH_TOKEN"))
+  private val ghToken = System.getenv("GH_TOKEN") ?: throw Error("You must set the GH_TOKEN env var")
+
+  private val github = GitHubClient(ghToken)
 
   private fun discoverPackages(): List<PackageUri> {
     val allPackages = buildList {
