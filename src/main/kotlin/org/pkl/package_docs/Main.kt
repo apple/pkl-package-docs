@@ -20,11 +20,14 @@ import java.nio.file.Path
 fun main(args: Array<String>) {
   val gitRootDir = Path.of(args[0])
   val outputDir = Path.of(args[1])
-  val repos = args.drop(2).map { repoStr ->
+  val doPublish = args[2] == "1"
+  val repos = args.drop(3).map { repoStr ->
     val (owner, repo) = repoStr.split("/")
     Repo(owner, repo)
   }
   val docsGenerator = PackageDocs(gitRootDir, outputDir, repos)
   docsGenerator.generateDocs()
-  docsGenerator.uploadDocs()
+  if (doPublish) {
+    docsGenerator.uploadDocs()
+  }
 }
