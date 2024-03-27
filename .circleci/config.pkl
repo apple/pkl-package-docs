@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //===----------------------------------------------------------------------===//
-amends "package://pkg.pkl-lang.org/pkl-project-commons/pkl.impl.circleci@1.0.0#/PklCI.pkl"
+amends "package://pkg.pkl-lang.org/pkl-project-commons/pkl.impl.circleci@1.0.2#/PklCI.pkl"
 
 prb {
   jobs {
@@ -36,11 +36,12 @@ main {
 jobs {
   ["test"] {
     docker {
-      new { image = "cimg/base:stable" }
+      new { image = "cimg/openjdk:17.0" }
     }
     steps {
+      "checkout"
       new RunStep {
-        command = "echo hello"
+        command = "./gradlew check"
       }
     }
   }
@@ -51,7 +52,7 @@ jobs {
     steps {
       "checkout"
       new RunStep {
-        command = "./gradlew generateDocs"
+        command = "./gradlew generateAndPublishDocs"
       }
     }
   }

@@ -36,13 +36,27 @@ val repos = arrayOf(
     "apple/pkl-swift"
 )
 
-tasks.create<JavaExec>("generateDocs") {
+tasks.create<JavaExec>("generateAndPublishDocs") {
+    group = "publish"
+    configureBuild(doPublish = true)
+}
+
+val generateDocs by tasks.registering(JavaExec::class) {
     group = "build"
-    mainClass.set("org.pkl.package_docs.MainKt")
+    configureBuild(doPublish = false)
+}
+
+fun JavaExec.configureBuild(doPublish: Boolean) {
     val outputDir = file("build/package-docs")
     val gitRootDir = file(".")
+    mainClass.set("org.pkl.package_docs.MainKt")
     classpath = sourceSets.main.get().runtimeClasspath
-    args = listOf(gitRootDir.absolutePath, outputDir.absolutePath, *repos)
+    args = buildList {
+        add(gitRootDir.absolutePath)
+        add(outputDir.absolutePath)
+        add(if (doPublish) "1" else "0")
+        addAll(repos)
+    }
 }
 
 spotless {

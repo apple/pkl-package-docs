@@ -57,7 +57,7 @@ class PackageDocs(
           if (repo.owner == "apple") {
             add(PackageUri("package://pkg.pkl-lang.org/${repo.name}/${release.name}"))
           } else {
-            add(PackageUri("package://pkg.pkl-lang.org/gh/${repo.owner}/${repo.name}/${release.name}"))
+            add(PackageUri("package://pkg.pkl-lang.org/github.com/${repo.owner}/${repo.name}/${release.name}"))
           }
         }
       }
@@ -95,9 +95,7 @@ class PackageDocs(
       return
     }
 
-    runCommand(listOf("git", "config", "--global", "user.email", "pkl-oss@group.apple.com"), docsOutputDir)
-    runCommand(listOf("git", "config", "--global", "user.name", "Pkl CI"), docsOutputDir)
-    runCommand(listOf("git", "commit", "-m", "Publish new documentation [skip ci]"), docsOutputDir)
+    runCommand(listOf("git", "commit", "--author=Pkl CI <pkl-oss@group.apple.com>", "-m", "Publish new documentation [skip ci]"), docsOutputDir)
     runCommand(listOf("git", "push", "origin", "www"), docsOutputDir)
   }
 

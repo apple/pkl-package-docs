@@ -5,15 +5,16 @@ orbs:
 jobs:
   test:
     steps:
+    - checkout
     - run:
-        command: echo hello
+        command: ./gradlew check
     docker:
-    - image: cimg/base:stable
+    - image: cimg/openjdk:17.0
   publish-docs:
     steps:
     - checkout
     - run:
-        command: ./gradlew generateDocs
+        command: ./gradlew generateAndPublishDocs
     docker:
     - image: cimg/openjdk:17.0
   trigger-docsite-build:
@@ -39,7 +40,6 @@ workflows:
     - test:
         requires:
         - hold
-        - pr-approval/authenticate
     when:
       matches:
         value: << pipeline.git.branch >>
