@@ -95,7 +95,16 @@ class PackageDocs(
       return
     }
 
-    runCommand(listOf("git", "commit", "--author=Pkl CI <pkl-oss@group.apple.com>", "-m", "Publish new documentation [skip ci]"), docsOutputDir)
+    runCommand(
+      listOf(
+        "git",
+        "commit",
+        "-c", "user.name=Pkl CI",
+        "-c", "user.email=pkl-oss@group.apple.com",
+        "-m", "Publish new documentation [skip ci]"
+      ),
+      docsOutputDir
+    )
     runCommand(listOf("git", "push", "origin", "www"), docsOutputDir)
   }
 
