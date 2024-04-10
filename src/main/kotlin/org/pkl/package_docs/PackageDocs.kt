@@ -98,9 +98,9 @@ class PackageDocs(
     runCommand(
       listOf(
         "git",
-        "commit",
         "-c", "user.name=Pkl CI",
         "-c", "user.email=pkl-oss@group.apple.com",
+        "commit",
         "-m", "Publish new documentation [skip ci]"
       ),
       docsOutputDir
