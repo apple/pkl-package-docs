@@ -1,7 +1,5 @@
 # Generated from CircleCI.pkl. DO NOT EDIT.
 version: '2.1'
-orbs:
-  pr-approval: apple/pr-approval@0.1.0
 jobs:
   test:
     steps:
@@ -46,8 +44,6 @@ workflows:
       - trigger-docsite-build:
           requires:
             - publish-docs
-          context:
-            - pkl-pr-approval
     when:
       equal:
         - main
