@@ -1,8 +1,8 @@
 [versions]
-pkl = "0.+"
+pkl = "0.25.+"
 ktor = "2.+"
 spotless = "6.25.0"
-kotlinxSerialization = "1.+"
+kotlinxSerialization = "1.6.+"
 kotlin = "1.+"
 
 [libraries]
