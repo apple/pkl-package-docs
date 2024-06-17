@@ -23,6 +23,7 @@ import org.pkl.core.PklInfo
 import org.pkl.core.Release
 import org.pkl.core.SecurityManagers
 import org.pkl.core.Version
+import org.pkl.core.http.HttpClient
 import org.pkl.core.packages.DependencyMetadata
 import org.pkl.core.packages.PackageAssetUri
 import org.pkl.core.packages.PackageLoadError
@@ -154,7 +155,7 @@ class PackageDocs(
   }
 
   private val packageResolver by lazy {
-    PackageResolver.getInstance(SecurityManagers.defaultManager, IoUtils.getDefaultModuleCacheDir())
+    PackageResolver.getInstance(SecurityManagers.defaultManager, HttpClient.builder().buildLazily(), IoUtils.getDefaultModuleCacheDir())
   }
 
   private val currentPklRelease = Release.current().version().toString()
