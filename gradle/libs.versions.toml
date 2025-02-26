@@ -3,7 +3,7 @@ pkl = "0.+"
 ktor = "2.+"
 spotless = "6.25.0"
 kotlinxSerialization = "1.6.+"
-kotlin = "1.+"
+kotlin = "2.+"
 
 [libraries]
 pklDoc = { group = "org.pkl-lang", name = "pkl-doc", version.ref = "pkl" }
