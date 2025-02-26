@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version libs.versions.kotlin
     alias(libs.plugins.pkl)
     alias(libs.plugins.spotless)
     alias(libs.plugins.kotlinSerialization)
@@ -9,6 +9,7 @@ group = "org.pkl-lang"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    maven(url = "https://s01.oss.sonatype.org/content/groups/public/")
     mavenCentral()
 }
 
