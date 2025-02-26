@@ -46,6 +46,7 @@ class PackageDocs(
 ) {
 
   private val ghToken = System.getenv("GH_TOKEN") ?: throw Error("You must set the GH_TOKEN env var")
+  private val pklOriginalRemoteName = System.getenv("PKL_ORIGINAL_REMOTE_NAME") ?: "origin"
 
   private val github = GitHubClient(ghToken)
 
@@ -106,7 +107,7 @@ class PackageDocs(
       ),
       docsOutputDir
     )
-    runCommand(listOf("git", "push", "origin", "www"), docsOutputDir)
+    runCommand(listOf("git", "push", pklOriginalRemoteName, "www"), docsOutputDir)
   }
 
   private fun getStdlibSchemas(): Pair<DocPackageInfo, List<ModuleSchema>> {
@@ -130,7 +131,7 @@ class PackageDocs(
   private fun downloadExistingDocs() {
     docsOutputDir.toFile().deleteRecursively()
     runCommand(listOf("git", "worktree", "prune"), gitRootDir)
-    runCommand(listOf("git", "fetch", "origin", "+www:www"), gitRootDir)
+    runCommand(listOf("git", "fetch", pklOriginalRemoteName, "+www:www"), gitRootDir)
     runCommand(listOf("git", "worktree", "add", docsOutputDir.toString(), "www"), gitRootDir)
   }
 
