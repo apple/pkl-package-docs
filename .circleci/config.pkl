@@ -52,7 +52,7 @@ jobs {
     steps {
       "checkout"
       new RunStep {
-        command = "./gradlew generateAndPublishDocs"
+        command = "./gradlew generateAndPublishDocs --refresh-dependencies"
       }
     }
   }
