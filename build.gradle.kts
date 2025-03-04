@@ -9,7 +9,6 @@ group = "org.pkl-lang"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven(url = "https://s01.oss.sonatype.org/content/groups/public/")
     mavenCentral()
 }
 
