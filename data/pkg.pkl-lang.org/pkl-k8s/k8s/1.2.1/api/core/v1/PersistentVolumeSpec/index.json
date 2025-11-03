@@ -7,14 +7,6 @@
     {
       "text": "VolumeAttachmentSource",
       "href": "../../../storage/v1beta1/VolumeAttachment/VolumeAttachmentSource.html"
-    },
-    {
-      "text": "VolumeAttachmentSource",
-      "href": "../../../storage/v1alpha1/VolumeAttachment/VolumeAttachmentSource.html"
-    },
-    {
-      "text": "VolumeAttachmentSource",
-      "href": "../../../storage/v1/VolumeAttachment/VolumeAttachmentSource.html"
     }
   ]
 }

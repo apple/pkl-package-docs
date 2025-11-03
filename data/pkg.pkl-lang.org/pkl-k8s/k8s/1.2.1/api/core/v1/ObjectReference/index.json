@@ -9,20 +9,8 @@
       "href": "../../../batch/v2alpha1/CronJob/CronJobStatus.html"
     },
     {
-      "text": "CronJobStatus",
-      "href": "../../../batch/v1beta1/CronJob/CronJobStatus.html"
-    },
-    {
-      "text": "CronJobStatus",
-      "href": "../../../batch/v1/CronJob/CronJobStatus.html"
-    },
-    {
       "text": "Endpoint",
       "href": "../../../discovery/v1beta1/EndpointSlice/Endpoint.html"
-    },
-    {
-      "text": "Endpoint",
-      "href": "../../../discovery/v1/EndpointSlice/Endpoint.html"
     },
     {
       "text": "EndpointAddress",
@@ -31,14 +19,6 @@
     {
       "text": "Event",
       "href": "../../../events/v1beta1/Event/index.html"
-    },
-    {
-      "text": "Event",
-      "href": "../../../events/v1/Event/index.html"
-    },
-    {
-      "text": "Event",
-      "href": "../Event/index.html"
     },
     {
       "text": "PersistentVolumeSpec",

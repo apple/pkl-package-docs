@@ -5,24 +5,8 @@
       "href": "../../../../../../api/rbac/v1beta1/ClusterRole/AggregationRule.html"
     },
     {
-      "text": "AggregationRule",
-      "href": "../../../../../../api/rbac/v1alpha1/ClusterRole/AggregationRule.html"
-    },
-    {
-      "text": "AggregationRule",
-      "href": "../../../../../../api/rbac/v1/ClusterRole/AggregationRule.html"
-    },
-    {
       "text": "CSIStorageCapacity",
       "href": "../../../../../../api/storage/v1beta1/CSIStorageCapacity/index.html"
-    },
-    {
-      "text": "CSIStorageCapacity",
-      "href": "../../../../../../api/storage/v1alpha1/CSIStorageCapacity/index.html"
-    },
-    {
-      "text": "CSIStorageCapacity",
-      "href": "../../../../../../api/storage/v1/CSIStorageCapacity/index.html"
     },
     {
       "text": "ClusterTrustBundleProjection",
@@ -53,28 +37,12 @@
       "href": "../../../../../../api/admissionregistration/v1beta1/MatchResources/index.html"
     },
     {
-      "text": "MatchResources",
-      "href": "../../../../../../api/admissionregistration/v1alpha1/MatchResources/index.html"
-    },
-    {
-      "text": "MatchResources",
-      "href": "../../../../../../api/admissionregistration/v1/MatchResources/index.html"
-    },
-    {
       "text": "MetricIdentifier",
       "href": "../../../../../../api/autoscaling/v2beta2/HorizontalPodAutoscaler/MetricIdentifier.html"
     },
     {
-      "text": "MetricIdentifier",
-      "href": "../../../../../../api/autoscaling/v2/HorizontalPodAutoscaler/MetricIdentifier.html"
-    },
-    {
       "text": "MutatingWebhook",
       "href": "../../../../../../api/admissionregistration/v1beta1/MutatingWebhookConfiguration/MutatingWebhook.html"
-    },
-    {
-      "text": "MutatingWebhook",
-      "href": "../../../../../../api/admissionregistration/v1/MutatingWebhookConfiguration/MutatingWebhook.html"
     },
     {
       "text": "NetworkPolicyPeer",
@@ -97,18 +65,6 @@
       "href": "../../../../../../api/admissionregistration/v1beta1/ValidatingAdmissionPolicyBinding/ParamRef.html"
     },
     {
-      "text": "ParamRef",
-      "href": "../../../../../../api/admissionregistration/v1alpha1/ValidatingAdmissionPolicyBinding/ParamRef.html"
-    },
-    {
-      "text": "ParamRef",
-      "href": "../../../../../../api/admissionregistration/v1alpha1/ParamRef/index.html"
-    },
-    {
-      "text": "ParamRef",
-      "href": "../../../../../../api/admissionregistration/v1/ValidatingAdmissionPolicyBinding/ParamRef.html"
-    },
-    {
       "text": "PersistentVolumeClaimSpec",
       "href": "../../../../../../api/core/v1/PersistentVolumeClaimSpec/index.html"
     },
@@ -119,10 +75,6 @@
     {
       "text": "PodDisruptionBudgetSpec",
       "href": "../../../../../../api/policy/v1beta1/PodDisruptionBudget/PodDisruptionBudgetSpec.html"
-    },
-    {
-      "text": "PodDisruptionBudgetSpec",
-      "href": "../../../../../../api/policy/v1/PodDisruptionBudget/PodDisruptionBudgetSpec.html"
     },
     {
       "text": "PodPresetSpec",
@@ -151,10 +103,6 @@
     {
       "text": "ValidatingWebhook",
       "href": "../../../../../../api/admissionregistration/v1beta1/ValidatingWebhookConfiguration/ValidatingWebhook.html"
-    },
-    {
-      "text": "ValidatingWebhook",
-      "href": "../../../../../../api/admissionregistration/v1/ValidatingWebhookConfiguration/ValidatingWebhook.html"
     }
   ]
 }

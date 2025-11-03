@@ -5,14 +5,6 @@
       "href": "../../v1beta1/SelfSubjectReview/SelfSubjectReviewStatus.html"
     },
     {
-      "text": "SelfSubjectReviewStatus",
-      "href": "../../v1alpha1/SelfSubjectReview/SelfSubjectReviewStatus.html"
-    },
-    {
-      "text": "SelfSubjectReviewStatus",
-      "href": "../SelfSubjectReview/SelfSubjectReviewStatus.html"
-    },
-    {
       "text": "TokenReviewStatus",
       "href": "../TokenReview/TokenReviewStatus.html"
     }
