@@ -35,7 +35,11 @@ import org.pkl.doc.DocPackageInfo
 import org.pkl.doc.DocsiteInfo
 import java.net.URI
 import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 class PackageDocException(message: String) : Exception(message)
 
@@ -71,12 +75,14 @@ class PackageDocs(
       .map { it.maxByOrNull(PackageUri::getVersion)!! }
   }
 
+  private val executor: Executor = Executors.newSingleThreadExecutor()
+
   fun generateDocs() {
     val packages = discoverPackages()
     val packageSchemas = packages.mapNotNull(::getSchemasFromPackage).toMap()
     // TODO: handle errors and change import resolver signature to `(URI) -> ModuleSchema?` in Pkldoc API
     val importResolver: (URI) -> ModuleSchema =
-      { uri: URI -> evaluator.evaluateSchema(ModuleSource.uri(uri)) }
+      { uri: URI -> this.evaluateSchema(ModuleSource.uri(uri)) }
     downloadExistingDocs()
     DocGenerator(
       docsiteInfo,
@@ -88,6 +94,7 @@ class PackageDocs(
     ).run()
     println("Wrote docs to $docsOutputDir")
     print(packages.joinToString("\n"))
+    exitProcess(0)
   }
 
   fun uploadDocs() {
@@ -111,11 +118,19 @@ class PackageDocs(
     runCommand(listOf("git", "push", pklOriginalRemoteName, "www"), docsOutputDir)
   }
 
+  private fun evaluateSchema(source: ModuleSource): ModuleSchema {
+    val fut: CompletableFuture<ModuleSchema> = CompletableFuture()
+    executor.execute {
+      fut.complete(evaluator.evaluateSchema(source))
+    }
+    return fut.get()
+  }
+
   private fun getStdlibSchemas(): Pair<DocPackageInfo, List<ModuleSchema>> {
     val release = Release.current()
     val schemas = release.standardLibrary().modules()
       .map { ModuleSource.uri(it) }
-      .map(evaluator::evaluateSchema)
+      .map(this::evaluateSchema)
     return stdlibDocPackageInfo to schemas
   }
 
@@ -219,7 +234,7 @@ class PackageDocs(
       val docPackageInfo = packageUri.toDocPackageInfo()
       val schemas = packageUri.gatherAllModules().mapNotNull {
         val schema = try {
-          evaluator.evaluateSchema(ModuleSource.uri(it.uri))
+          this.evaluateSchema(ModuleSource.uri(it.uri))
         } catch (e: Throwable) {
           return@mapNotNull null
         }
