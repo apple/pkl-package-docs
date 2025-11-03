@@ -68,7 +68,7 @@ class PackageDocs(
     return allPackages
       .groupBy { it.pathWithoutVersion }
       .values
-      .map { it.sortedBy(PackageUri::getVersion).last() }
+      .map { it.maxByOrNull(PackageUri::getVersion)!! }
   }
 
   fun generateDocs() {
@@ -83,7 +83,8 @@ class PackageDocs(
       mapOf(getStdlibSchemas()) + packageSchemas,
       importResolver,
       { v1, v2 -> Version.parse(v1).compareTo(Version.parse(v2)) },
-      docsOutputDir
+      docsOutputDir,
+      consoleOut = System.out
     ).run()
     println("Wrote docs to $docsOutputDir")
     print(packages.joinToString("\n"))
@@ -166,7 +167,7 @@ class PackageDocs(
     uri = null,
     version = currentPklRelease,
     sourceCode = URI(Release.current().sourceCode().homepage()),
-    sourceCodeUrlScheme = Release.current().sourceCode().sourceCodeUrlScheme,
+    sourceCodeUrlScheme = Release.current().sourceCode().sourceCodeUrlScheme(),
     documentation = URI(PklInfo.current().packageIndex.getPackagePage("pkl", currentPklRelease))
   )
 
