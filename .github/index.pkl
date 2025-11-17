@@ -23,9 +23,9 @@ build = baseWorkflow
 
 prb = baseWorkflow
 
-main = (baseWorkflow) {
+main = new {
   jobs {
-    ["publish-docs"] = publishJob
+    ["build-and-publish-docs"] = publishJob
   }
 }
 
@@ -50,7 +50,8 @@ local testJob: Workflow.Job = new {
       name = "Setup Java"
       with {
         distribution = "temurin"
-        `java-version` = "17.0.17"
+        `java-version` = "21"
+        cache = "gradle"
       }
     }
     new {
@@ -73,12 +74,13 @@ local publishJob: Workflow.Job = new {
       name = "Setup Java"
       with {
         distribution = "temurin"
-        `java-version` = "17.0.17"
+        `java-version` = "21"
+        cache = "gradle"
       }
     }
     new {
       name = "Generate and publish docs"
-      run = "./gradlew generateAndPublishDocs --refresh-dependencies"
+      run = "./gradlew check generateAndPublishDocs --refresh-dependencies"
     }
   }
 }
