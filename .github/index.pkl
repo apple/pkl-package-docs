@@ -17,6 +17,7 @@ amends "@pkl.impl.ghactions/PklCI.pkl"
 
 import "@gha/actions/Common.pkl"
 import "@gha/actions/Setup.pkl"
+import "@gha/Context.pkl"
 import "@gha/Workflow.pkl"
 
 build = baseWorkflow
@@ -79,6 +80,9 @@ local publishJob: Workflow.Job = new {
       }
     }
     new {
+      env {
+        ["GH_TOKEN"] = Context.github.token
+      }
       name = "Generate and publish docs"
       run = "./gradlew check generateAndPublishDocs --refresh-dependencies"
     }
