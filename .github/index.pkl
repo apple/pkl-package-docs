@@ -65,6 +65,9 @@ local testJob: Workflow.Job = new {
 local publishJob: Workflow.Job = new {
   name = "Generate and publish docs"
   `runs-on` = "ubuntu-latest"
+  permissions {
+    contents = "write"
+  }
   steps {
     new Common.Checkout {
       with {

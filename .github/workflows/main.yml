@@ -16,6 +16,8 @@ permissions:
 jobs:
   build-and-publish-docs:
     name: Generate and publish docs
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
