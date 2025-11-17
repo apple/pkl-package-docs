@@ -16,6 +16,8 @@ permissions:
 jobs:
   build-and-publish-docs:
     name: Generate and publish docs
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
@@ -28,6 +30,8 @@ jobs:
         distribution: temurin
         cache: gradle
     - name: Generate and publish docs
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: ./gradlew check generateAndPublishDocs --refresh-dependencies
   trigger-downstream-builds:
     if: github.repository_owner == 'apple'
