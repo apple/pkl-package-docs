@@ -8,6 +8,12 @@ name: Build (main)
     - main
     tags-ignore:
     - '**'
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: The source GitHub Action workflow run triggering this build
+        required: false
+        type: string
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
@@ -20,6 +26,9 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+    - name: Triggered by
+      if: inputs.source_run != null
+      run: 'echo "Triggered by workflow in repo: ${{ inputs.source_run }}" >> $GITHUB_STEP_SUMMARY'
     - uses: actions/checkout@v5
       with:
         fetch-depth: 0
