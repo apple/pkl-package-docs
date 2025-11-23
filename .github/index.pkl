@@ -24,7 +24,18 @@ build = baseWorkflow
 
 prb = baseWorkflow
 
-main = new {
+main {
+  on {
+    workflow_dispatch {
+      inputs {
+        ["source_run"] {
+          type = "string"
+          required = false
+          description = "The source GitHub Action workflow run triggering this build"
+        }
+      }
+    }
+  }
   jobs {
     ["build-and-publish-docs"] = publishJob
   }
@@ -69,6 +80,13 @@ local publishJob: Workflow.Job = new {
     contents = "write"
   }
   steps {
+    new {
+      name = "Triggered by"
+      `if` = "inputs.source_run != null"
+      run = """
+        echo "Triggered by workflow in repo: ${{ inputs.source_run }}" >> $GITHUB_STEP_SUMMARY
+        """
+    }
     new Common.Checkout {
       with {
         `fetch-depth` = 0
