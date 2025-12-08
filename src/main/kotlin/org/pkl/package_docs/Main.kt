@@ -1,5 +1,5 @@
 /**
- * Copyright © 2024 Apple Inc. and the Pkl project authors. All rights reserved.
+ * Copyright © 2024-2025 Apple Inc. and the Pkl project authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.pkl.package_docs
 
 import java.nio.file.Path
+import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
   val gitRootDir = Path.of(args[0])
@@ -30,4 +31,8 @@ fun main(args: Array<String>) {
   if (doPublish) {
     docsGenerator.uploadDocs()
   }
+  // hotfix: call `exitProcess` here to workaround something
+  // causing the docs generator to hang.
+  // TODO: figure out why this is hanging.
+  exitProcess(0)
 }
