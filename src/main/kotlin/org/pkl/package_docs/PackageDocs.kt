@@ -94,7 +94,6 @@ class PackageDocs(
     ).run()
     println("Wrote docs to $docsOutputDir")
     print(packages.joinToString("\n"))
-    exitProcess(0)
   }
 
   fun uploadDocs() {
