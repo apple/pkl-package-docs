@@ -100,6 +100,13 @@ local publishJob: Workflow.Job = new {
         cache = "gradle"
       }
     }
+    // check out again to write credentials to workspace (needed by publish task).
+    new Common.Checkout {
+      with {
+        `fetch-depth` = 0
+        `persist-credentials` = true
+      }
+    }
     new {
       env {
         ["GH_TOKEN"] = Context.github.token

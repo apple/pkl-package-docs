@@ -26,13 +26,19 @@ fun main(args: Array<String>) {
     val (owner, repo) = repoStr.split("/")
     Repo(owner, repo)
   }
-  val docsGenerator = PackageDocs(gitRootDir, outputDir, repos)
-  docsGenerator.generateDocs()
-  if (doPublish) {
-    docsGenerator.uploadDocs()
-  }
+  try {
+    val docsGenerator = PackageDocs(gitRootDir, outputDir, repos)
+    docsGenerator.generateDocs()
+    if (doPublish) {
+      docsGenerator.uploadDocs()
+    }
   // hotfix: call `exitProcess` here to workaround something
   // causing the docs generator to hang.
   // TODO: figure out why this is hanging.
-  exitProcess(0)
+  } catch (e: Throwable) {
+    System.err.println(e.stackTraceToString())
+    exitProcess(1)
+  } finally {
+    exitProcess(0)
+  }
 }
