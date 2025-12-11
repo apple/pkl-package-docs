@@ -15,10 +15,9 @@
 //===----------------------------------------------------------------------===//
 amends "@pkl.impl.ghactions/PklCI.pkl"
 
-import "@gha/actions/Common.pkl"
-import "@gha/actions/Setup.pkl"
-import "@gha/Context.pkl"
-import "@gha/Workflow.pkl"
+import "@com.github.actions/catalog.pkl"
+import "@com.github.actions/context.pkl"
+import "@com.github.actions/Workflow.pkl"
 
 build = baseWorkflow
 
@@ -53,12 +52,12 @@ local testJob: Workflow.Job = new {
   name = "Build and test"
   `runs-on` = "ubuntu-latest"
   steps {
-    new Common.Checkout {
+    (catalog.`actions/checkout@v6`) {
       with {
         `fetch-depth` = 0
       }
     }
-    new Setup.Java {
+    (catalog.`actions/setup-java@v5`) {
       name = "Setup Java"
       with {
         distribution = "temurin"
@@ -83,16 +82,17 @@ local publishJob: Workflow.Job = new {
     new {
       name = "Triggered by"
       `if` = "inputs.source_run != null"
-      run = """
+      run =
+        """
         echo "Triggered by workflow in repo: ${{ inputs.source_run }}" >> $GITHUB_STEP_SUMMARY
         """
     }
-    new Common.Checkout {
+    (catalog.`actions/checkout@v6`) {
       with {
         `fetch-depth` = 0
       }
     }
-    new Setup.Java {
+    (catalog.`actions/setup-java@v5`) {
       name = "Setup Java"
       with {
         distribution = "temurin"
@@ -101,7 +101,7 @@ local publishJob: Workflow.Job = new {
       }
     }
     // check out again to write credentials to workspace (needed by publish task).
-    new Common.Checkout {
+    (catalog.`actions/checkout@v6`) {
       with {
         `fetch-depth` = 0
         `persist-credentials` = true
@@ -109,7 +109,7 @@ local publishJob: Workflow.Job = new {
     }
     new {
       env {
-        ["GH_TOKEN"] = Context.github.token
+        ["GH_TOKEN"] = context.github.token
       }
       name = "Generate and publish docs"
       run = "./gradlew check generateAndPublishDocs --refresh-dependencies"
