@@ -26,7 +26,9 @@ jobs:
     steps:
     - name: Triggered by
       if: inputs.source_run != null
-      run: 'echo "Triggered by workflow in repo: ${{ inputs.source_run }}" >> $GITHUB_STEP_SUMMARY'
+      env:
+        INPUTS_SOURCE_RUN: ${{ inputs.source_run }}
+      run: 'echo "Triggered by workflow in repo: ${INPUTS_SOURCE_RUN}" >> $GITHUB_STEP_SUMMARY'
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         persist-credentials: false
