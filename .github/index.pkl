@@ -84,8 +84,11 @@ local publishJob: Workflow.Job = new {
       `if` = "inputs.source_run != null"
       run =
         """
-        echo "Triggered by workflow in repo: ${{ inputs.source_run }}" >> $GITHUB_STEP_SUMMARY
+        echo "Triggered by workflow in repo: ${INPUTS_SOURCE_RUN}" >> $GITHUB_STEP_SUMMARY
         """
+      env {
+        ["INPUTS_SOURCE_RUN"] = "${{ inputs.source_run }}"
+      }
     }
     (catalog.`actions/checkout@v6`) {
       with {
