@@ -1,5 +1,5 @@
 /**
- * Copyright © 2024-2025 Apple Inc. and the Pkl project authors. All rights reserved.
+ * Copyright © 2024-2026 Apple Inc. and the Pkl project authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.pkl.commons.cli.CliException
 import org.pkl.core.Evaluator
 import org.pkl.core.ModuleSchema
 import org.pkl.core.ModuleSource
+import org.pkl.core.PklException
 import org.pkl.core.PklInfo
 import org.pkl.core.Release
 import org.pkl.core.SecurityManagers
@@ -120,7 +121,11 @@ class PackageDocs(
   private fun evaluateSchema(source: ModuleSource): ModuleSchema {
     val fut: CompletableFuture<ModuleSchema> = CompletableFuture()
     executor.execute {
-      fut.complete(evaluator.evaluateSchema(source))
+      try {
+        fut.complete(evaluator.evaluateSchema(source))
+      } catch (e: PklException) {
+        fut.completeExceptionally(e)
+      }
     }
     return fut.get()
   }
