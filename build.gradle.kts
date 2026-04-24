@@ -8,6 +8,14 @@ plugins {
 group = "org.pkl-lang"
 version = "1.0-SNAPSHOT"
 
+configurations {
+    all {
+        resolutionStrategy {
+            failOnDynamicVersions()
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -36,7 +44,7 @@ val repos = arrayOf(
     "apple/pkl-swift"
 )
 
-tasks.create<JavaExec>("generateAndPublishDocs") {
+val generateAndPublishDocs by tasks.registering(JavaExec::class) {
     group = "publish"
     configureBuild(doPublish = true)
 }
@@ -64,9 +72,10 @@ val originalRemoteName = System.getenv("PKL_ORIGINAL_REMOTE_NAME") ?: "origin"
 spotless {
     ratchetFrom = "$originalRemoteName/main"
     kotlin {
-        licenseHeader("""
+        licenseHeader(
+            $$"""
             /**
-             * Copyright © ${'$'}YEAR Apple Inc. and the Pkl project authors. All rights reserved.
+             * Copyright © $YEAR Apple Inc. and the Pkl project authors. All rights reserved.
              *
              * Licensed under the Apache License, Version 2.0 (the "License");
              * you may not use this file except in compliance with the License.
@@ -83,9 +92,10 @@ spotless {
         """.trimIndent())
     }
     format("pkl") {
-        licenseHeader("""
+        licenseHeader(
+            $$"""
             //===----------------------------------------------------------------------===//
-            // Copyright © ${'$'}YEAR Apple Inc. and the Pkl project authors. All rights reserved.
+            // Copyright © $YEAR Apple Inc. and the Pkl project authors. All rights reserved.
             //
             // Licensed under the Apache License, Version 2.0 (the "License");
             // you may not use this file except in compliance with the License.
