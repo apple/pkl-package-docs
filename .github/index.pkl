@@ -119,3 +119,21 @@ local publishJob: Workflow.Job = new {
     }
   }
 }
+
+dependabot {
+  updates {
+    new {
+      `package-ecosystem` = "gradle"
+      directory = "/"
+      cooldown {
+        `default-days` = 7
+        exclude {
+          "org.pkl-lang:*"
+        }
+      }
+      schedule {
+        interval = "weekly"
+      }
+    }
+  }
+}
