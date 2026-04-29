@@ -41,7 +41,8 @@ val repos = arrayOf(
     "apple/pkl-pantry",
     "apple/pkl-k8s",
     "apple/pkl-go",
-    "apple/pkl-swift"
+    "apple/pkl-swift",
+    "apple/pkl-readers",
 )
 
 val generateAndPublishDocs by tasks.registering(JavaExec::class) {
