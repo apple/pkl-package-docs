@@ -1,5 +1,5 @@
 [versions]
-pkl = "0.31.1"
+pkl = "0.32.0"
 ktor = "3.5.0"
 spotless = "8.6.0"
 kotlinxSerialization = "1.11.0"
