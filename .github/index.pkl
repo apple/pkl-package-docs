@@ -128,11 +128,11 @@ dependabot {
       cooldown {
         `default-days` = 7
         exclude {
-          "org.pkl-lang:*"
+          "org.pkl-lang"
         }
       }
       schedule {
-        interval = "weekly"
+        interval = "quarterly"
       }
     }
   }
