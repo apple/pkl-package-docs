@@ -127,13 +127,10 @@ dependabot {
       directory = "/"
       cooldown {
         `default-days` = 7
-        exclude {
-          "org.pkl-lang"
-        }
       }
       ignore {
         new {
-          `dependency-name` = "org.pkl-lang"
+          `dependency-name` = "org.pkl-lang:*"
         }
       }
       schedule {
