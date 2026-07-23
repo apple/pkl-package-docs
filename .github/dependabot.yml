@@ -6,6 +6,8 @@ updates:
     exclude:
     - org.pkl-lang
   directory: /
+  ignore:
+  - dependency-name: org.pkl-lang
   schedule:
     interval: quarterly
 - package-ecosystem: github-actions

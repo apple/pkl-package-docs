@@ -131,6 +131,11 @@ dependabot {
           "org.pkl-lang"
         }
       }
+      ignore {
+        new {
+          `dependency-name` = "org.pkl-lang"
+        }
+      }
       schedule {
         interval = "quarterly"
       }
