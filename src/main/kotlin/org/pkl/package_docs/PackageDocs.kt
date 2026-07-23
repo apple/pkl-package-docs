@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2024-2026 Apple Inc. and the Pkl project authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,12 @@
  */
 package org.pkl.package_docs
 
+import java.net.URI
+import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import org.pkl.commons.cli.CliException
 import org.pkl.core.Evaluator
 import org.pkl.core.ModuleSchema
@@ -34,23 +40,17 @@ import org.pkl.core.util.IoUtils
 import org.pkl.doc.DocGenerator
 import org.pkl.doc.DocPackageInfo
 import org.pkl.doc.DocsiteInfo
-import java.net.URI
-import java.nio.file.Path
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import kotlin.system.exitProcess
 
 class PackageDocException(message: String) : Exception(message)
 
 class PackageDocs(
-  private val gitRootDir: Path,
-  private val docsOutputDir: Path,
-  private val repos: List<Repo>
+    private val gitRootDir: Path,
+    private val docsOutputDir: Path,
+    private val repos: List<Repo>,
 ) {
 
-  private val ghToken = System.getenv("GH_TOKEN") ?: throw Error("You must set the GH_TOKEN env var")
+  private val ghToken =
+      System.getenv("GH_TOKEN") ?: throw Error("You must set the GH_TOKEN env var")
   private val pklOriginalRemoteName = System.getenv("PKL_ORIGINAL_REMOTE_NAME") ?: "origin"
 
   private val github = GitHubClient(ghToken)
@@ -58,22 +58,25 @@ class PackageDocs(
   private fun discoverPackages(): List<PackageUri> {
     val allPackages = buildList {
       for (repo in repos) {
-        val releases = github.getReleases(repo)
-          .filter { it.name.contains('@') }
+        val releases = github.getReleases(repo).filter { it.name.contains('@') }
         for (release in releases) {
           if (repo.owner == "apple") {
             add(PackageUri("package://pkg.pkl-lang.org/${repo.name}/${release.name}"))
           } else {
-            add(PackageUri("package://pkg.pkl-lang.org/github.com/${repo.owner}/${repo.name}/${release.name}"))
+            add(
+                PackageUri(
+                    "package://pkg.pkl-lang.org/github.com/${repo.owner}/${repo.name}/${release.name}"
+                )
+            )
           }
         }
       }
     }
     // get the latest release of every package
     return allPackages
-      .groupBy { it.pathWithoutVersion }
-      .values
-      .map { it.maxByOrNull(PackageUri::getVersion)!! }
+        .groupBy { it.pathWithoutVersion }
+        .values
+        .map { it.maxByOrNull(PackageUri::getVersion)!! }
   }
 
   private val executor: Executor = Executors.newSingleThreadExecutor()
@@ -81,39 +84,46 @@ class PackageDocs(
   fun generateDocs() {
     val packages = discoverPackages()
     val packageSchemas = packages.mapNotNull(::getSchemasFromPackage).toMap()
-    // TODO: handle errors and change import resolver signature to `(URI) -> ModuleSchema?` in Pkldoc API
-    val importResolver: (URI) -> ModuleSchema =
-      { uri: URI -> this.evaluateSchema(ModuleSource.uri(uri)) }
+    // TODO: handle errors and change import resolver signature to `(URI) -> ModuleSchema?` in
+    // Pkldoc API
+    val importResolver: (URI) -> ModuleSchema = { uri: URI ->
+      this.evaluateSchema(ModuleSource.uri(uri))
+    }
     downloadExistingDocs()
     DocGenerator(
-      docsiteInfo,
-      mapOf(getStdlibSchemas()) + packageSchemas,
-      importResolver,
-      { v1, v2 -> Version.parse(v1).compareTo(Version.parse(v2)) },
-      docsOutputDir,
-      consoleOut = System.out
-    ).run()
+            docsiteInfo,
+            mapOf(getStdlibSchemas()) + packageSchemas,
+            importResolver,
+            { v1, v2 -> Version.parse(v1).compareTo(Version.parse(v2)) },
+            docsOutputDir,
+            consoleOut = System.out,
+        )
+        .run()
     println("Wrote docs to $docsOutputDir")
     print(packages.joinToString("\n"))
   }
 
   fun uploadDocs() {
     runCommand(listOf("git", "add", "--all", "."), docsOutputDir)
-    val diff = runCommandAllowingError(listOf("git", "diff-index", "--quiet", "HEAD"), docsOutputDir)
+    val diff =
+        runCommandAllowingError(listOf("git", "diff-index", "--quiet", "HEAD"), docsOutputDir)
     if (diff.exitValue == 0) {
       println("No new docs to upload")
       return
     }
 
     runCommand(
-      listOf(
-        "git",
-        "-c", "user.name=Pkl CI",
-        "-c", "user.email=pkl-oss@group.apple.com",
-        "commit",
-        "-m", "Publish new documentation [skip ci]"
-      ),
-      docsOutputDir
+        listOf(
+            "git",
+            "-c",
+            "user.name=Pkl CI",
+            "-c",
+            "user.email=pkl-oss@group.apple.com",
+            "commit",
+            "-m",
+            "Publish new documentation [skip ci]",
+        ),
+        docsOutputDir,
     )
     runCommand(listOf("git", "push", pklOriginalRemoteName, "www"), docsOutputDir)
   }
@@ -132,9 +142,8 @@ class PackageDocs(
 
   private fun getStdlibSchemas(): Pair<DocPackageInfo, List<ModuleSchema>> {
     val release = Release.current()
-    val schemas = release.standardLibrary().modules()
-      .map { ModuleSource.uri(it) }
-      .map(this::evaluateSchema)
+    val schemas =
+        release.standardLibrary().modules().map { ModuleSource.uri(it) }.map(this::evaluateSchema)
     return stdlibDocPackageInfo to schemas
   }
 
@@ -160,7 +169,9 @@ class PackageDocs(
   private fun runCommand(command: List<String>, workingDir: Path): ProcessResult {
     val result = runCommandAllowingError(command, workingDir)
     if (result.exitValue != 0) {
-      throw PackageDocException("Failed to run command: ${command.joinToString(" ")}. Got stdout: ${result.stdout}, and stderr: ${result.stderr}")
+      throw PackageDocException(
+          "Failed to run command: ${command.joinToString(" ")}. Got stdout: ${result.stdout}, and stderr: ${result.stderr}"
+      )
     }
     return result
   }
@@ -176,36 +187,46 @@ class PackageDocs(
   }
 
   private val packageResolver by lazy {
-    PackageResolver.getInstance(SecurityManagers.defaultManager, HttpClient.builder().buildLazily(), IoUtils.getDefaultModuleCacheDir())
+    PackageResolver.getInstance(
+        SecurityManagers.defaultManager,
+        HttpClient.builder().buildLazily(),
+        IoUtils.getDefaultModuleCacheDir(),
+    )
   }
 
   private val currentPklRelease = Release.current().version().toString()
 
-  private val stdlibDependency = DocPackageInfo.PackageDependency(
-    name = "pkl",
-    uri = null,
-    version = currentPklRelease,
-    sourceCode = URI(Release.current().sourceCode().homepage()),
-    sourceCodeUrlScheme = Release.current().sourceCode().sourceCodeUrlScheme(),
-    documentation = URI(PklInfo.current().packageIndex.getPackagePage("pkl", currentPklRelease))
-  )
+  private val stdlibDependency =
+      DocPackageInfo.PackageDependency(
+          name = "pkl",
+          uri = null,
+          version = currentPklRelease,
+          sourceCode = URI(Release.current().sourceCode().homepage()),
+          sourceCodeUrlScheme = Release.current().sourceCode().sourceCodeUrlScheme(),
+          documentation =
+              URI(PklInfo.current().packageIndex.getPackagePage("pkl", currentPklRelease)),
+      )
 
   private fun DependencyMetadata.getPackageDependencies(): List<DocPackageInfo.PackageDependency> {
     return buildList {
       for ((_, dependency) in dependencies) {
-        val metadata = try {
-          packageResolver.getDependencyMetadata(dependency.packageUri, dependency.checksums)
-        } catch (e: Exception) {
-          throw CliException("Failed to fetch dependency metadata for ${dependency.packageUri}: ${e.message}")
-        }
-        val packageDependency = DocPackageInfo.PackageDependency(
-          name = metadata.name,
-          uri = dependency.packageUri.uri,
-          version = metadata.version.toString(),
-          sourceCode = metadata.sourceCode,
-          sourceCodeUrlScheme = metadata.sourceCodeUrlScheme,
-          documentation = metadata.documentation
-        )
+        val metadata =
+            try {
+              packageResolver.getDependencyMetadata(dependency.packageUri, dependency.checksums)
+            } catch (e: Exception) {
+              throw CliException(
+                  "Failed to fetch dependency metadata for ${dependency.packageUri}: ${e.message}"
+              )
+            }
+        val packageDependency =
+            DocPackageInfo.PackageDependency(
+                name = metadata.name,
+                uri = dependency.packageUri.uri,
+                version = metadata.version.toString(),
+                sourceCode = metadata.sourceCode,
+                sourceCodeUrlScheme = metadata.sourceCodeUrlScheme,
+                documentation = metadata.documentation,
+            )
         add(packageDependency)
       }
       add(stdlibDependency)
@@ -233,22 +254,26 @@ class PackageDocs(
     Evaluator.preconfigured()
   }
 
-  private fun getSchemasFromPackage(packageUri: PackageUri): Pair<DocPackageInfo, List<ModuleSchema>>? {
+  private fun getSchemasFromPackage(
+      packageUri: PackageUri
+  ): Pair<DocPackageInfo, List<ModuleSchema>>? {
     return try {
       val docPackageInfo = packageUri.toDocPackageInfo()
-      val schemas = packageUri.gatherAllModules().mapNotNull {
-        val schema = try {
-          this.evaluateSchema(ModuleSource.uri(it.uri))
-        } catch (e: Throwable) {
-          return@mapNotNull null
-        }
-        val moduleName = schema.moduleName
-        val expectedModuleName = docPackageInfo.moduleNamePrefix + it.assetPath.toString().drop(1)
-          .dropLast(4)
-          .replace('/', '.')
-        if (moduleName != expectedModuleName) {
-          println(
-            """
+      val schemas =
+          packageUri.gatherAllModules().mapNotNull {
+            val schema =
+                try {
+                  this.evaluateSchema(ModuleSource.uri(it.uri))
+                } catch (e: Throwable) {
+                  return@mapNotNull null
+                }
+            val moduleName = schema.moduleName
+            val expectedModuleName =
+                docPackageInfo.moduleNamePrefix +
+                    it.assetPath.toString().drop(1).dropLast(4).replace('/', '.')
+            if (moduleName != expectedModuleName) {
+              println(
+                  """
               Module ${it.uri} has an incorrect name. Skipping docs.
               
               Expected:
@@ -256,46 +281,49 @@ class PackageDocs(
               
               Actual:
               $moduleName
-            """.trimIndent()
-          )
-          return null
-        }
-        schema
-      }
+            """
+                      .trimIndent()
+              )
+              return null
+            }
+            schema
+          }
       docPackageInfo to schemas
     } catch (e: Throwable) {
-      println("""
+      println(
+          """
         Failed to fetch package info for $packageUri:
         
         ${e.message}
-      """.trimIndent())
+      """
+              .trimIndent()
+      )
       null
     }
   }
 
   private fun PackageUri.toDocPackageInfo(): DocPackageInfo {
-    val metadataAndChecksum = try {
-      packageResolver.getDependencyMetadataAndComputeChecksum(this)
-    } catch (e: PackageLoadError) {
-      throw CliException("Failed to package metadata for $this: ${e.message}")
-    }
+    val metadataAndChecksum =
+        try {
+          packageResolver.getDependencyMetadataAndComputeChecksum(this)
+        } catch (e: PackageLoadError) {
+          throw CliException("Failed to package metadata for $this: ${e.message}")
+        }
     val metadata = metadataAndChecksum.first
     val checksum = metadataAndChecksum.second
     return DocPackageInfo(
-      name = "${uri.authority}${uri.path.substringBeforeLast('@')}",
-      moduleNamePrefix = "${metadata.name}.",
-      version = metadata.version.toString(),
-      importUri = toPackageAssetUri("/").toString(),
-      uri = uri,
-      authors = metadata.authors,
-      issueTracker = metadata.issueTracker,
-      dependencies = metadata.getPackageDependencies(),
-      overview = metadata.description,
-      extraAttributes = mapOf(
-        "Checksum" to checksum.sha256
-      ),
-      sourceCode = metadata.sourceCode,
-      sourceCodeUrlScheme = metadata.sourceCodeUrlScheme
+        name = "${uri.authority}${uri.path.substringBeforeLast('@')}",
+        moduleNamePrefix = "${metadata.name}.",
+        version = metadata.version.toString(),
+        importUri = toPackageAssetUri("/").toString(),
+        uri = uri,
+        authors = metadata.authors,
+        issueTracker = metadata.issueTracker,
+        dependencies = metadata.getPackageDependencies(),
+        overview = metadata.description,
+        extraAttributes = mapOf("Checksum" to checksum.sha256),
+        sourceCode = metadata.sourceCode,
+        sourceCodeUrlScheme = metadata.sourceCodeUrlScheme,
     )
   }
 }

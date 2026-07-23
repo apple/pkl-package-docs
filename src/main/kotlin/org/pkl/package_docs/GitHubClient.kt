@@ -1,5 +1,5 @@
-/**
- * Copyright © 2024 Apple Inc. and the Pkl project authors. All rights reserved.
+/*
+ * Copyright © 2024-2026 Apple Inc. and the Pkl project authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,16 @@
  */
 package org.pkl.package_docs
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
-@Serializable
-data class Release(val name: String)
+@Serializable data class Release(val name: String)
 
 data class Repo(val owner: String, val name: String)
 
@@ -49,22 +48,23 @@ class GitHubClient(private val token: String) {
 
   private val httpClient: HttpClient by lazy {
     HttpClient.newBuilder()
-      .apply {
-        connectTimeout(Duration.ofSeconds(60))
-      }
-      .build()
+        .apply {
+          connectTimeout(Duration.ofSeconds(60))
+        }
+        .build()
   }
 
-  private inline fun <reified T>get(url: String): T {
-    val request = httpRequestBuilder()
-      .apply {
-        GET()
-        uri(baseUri.resolve(url))
-      }
-      .build()
+  private inline fun <reified T> get(url: String): T {
+    val request =
+        httpRequestBuilder()
+            .apply {
+              GET()
+              uri(baseUri.resolve(url))
+            }
+            .build()
     val respText = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
     return json.decodeFromString(respText.body())
   }
 
-  fun getReleases(repo: Repo): List<Release> =get("/repos/${repo.owner}/${repo.name}/releases")
+  fun getReleases(repo: Repo): List<Release> = get("/repos/${repo.owner}/${repo.name}/releases")
 }

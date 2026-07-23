@@ -1,5 +1,5 @@
-/**
- * Copyright © 2024-2025 Apple Inc. and the Pkl project authors. All rights reserved.
+/*
+ * Copyright © 2024-2026 Apple Inc. and the Pkl project authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +22,20 @@ fun main(args: Array<String>) {
   val gitRootDir = Path.of(args[0])
   val outputDir = Path.of(args[1])
   val doPublish = args[2] == "1"
-  val repos = args.drop(3).map { repoStr ->
-    val (owner, repo) = repoStr.split("/")
-    Repo(owner, repo)
-  }
+  val repos =
+      args.drop(3).map { repoStr ->
+        val (owner, repo) = repoStr.split("/")
+        Repo(owner, repo)
+      }
   try {
     val docsGenerator = PackageDocs(gitRootDir, outputDir, repos)
     docsGenerator.generateDocs()
     if (doPublish) {
       docsGenerator.uploadDocs()
     }
-  // hotfix: call `exitProcess` here to workaround something
-  // causing the docs generator to hang.
-  // TODO: figure out why this is hanging.
+    // hotfix: call `exitProcess` here to workaround something
+    // causing the docs generator to hang.
+    // TODO: figure out why this is hanging.
   } catch (e: Throwable) {
     System.err.println(e.stackTraceToString())
     exitProcess(1)
