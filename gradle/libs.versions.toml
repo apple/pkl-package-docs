@@ -1,6 +1,6 @@
 [versions]
 pkl = "0.+"
-ktor = "3.5.1"
+ktor = "3.6.0"
 spotless = "8.10.2"
 kotlinxSerialization = "1.11.0"
 kotlin = "2.4.20"
