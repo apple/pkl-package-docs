@@ -8,6 +8,9 @@ build/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/kotlinc.xml
+.idea/google-java-format.xml
+.idea/go.imports.xml
 *.iws
 *.iml
 *.ipr
