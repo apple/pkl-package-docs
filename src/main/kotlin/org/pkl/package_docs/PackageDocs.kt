@@ -190,7 +190,7 @@ class PackageDocs(
     PackageResolver.getInstance(
         SecurityManagers.defaultManager,
         HttpClient.builder().buildLazily(),
-        IoUtils.getDefaultModuleCacheDir(),
+        IoUtils.getSystemModuleCacheDir(),
     )
   }
 
